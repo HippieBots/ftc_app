@@ -4,21 +4,17 @@
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInputController;
-import com.qualcomm.robotcore.hardware.configuration.ControllerConfiguration;
-
-import java.util.List;
+import com.hippiebots.util.Controller;
 
 @TeleOp(name = "TELEOP")
 public class MecanumTeleop extends OpMode {
-
     private Robot robot = null;
-    private boolean debug_mode = false;
     private Controller g1, g2;
+    private boolean debug_mode =false;
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap);
+        robot = new Robot(hardwareMap, telemetry);
 
         g1 = new Controller(gamepad1);
         g2 =  new Controller(gamepad2);
@@ -72,9 +68,7 @@ public class MecanumTeleop extends OpMode {
     public void loop() {
         g1.update();
         g2.update();
-        //robot.loop();
-        g1Loop(g1);
-        g2Loop(g2);
+        DriverHelper.drive(g1,robot);
         if (debug_mode) {
             robot.updateSensorTelemetry();
             telemetry.update();
