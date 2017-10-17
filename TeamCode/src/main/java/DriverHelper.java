@@ -40,6 +40,6 @@ public class DriverHelper {
             theta += Math.PI / 2.0;
         }
 
-        //robot.drive(theta, v_theta, v_rotation);
+        robot.drive(theta, v_theta, v_rotation);
     }
 }
