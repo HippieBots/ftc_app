@@ -19,6 +19,13 @@
 ////        if(debug_mode) {
 ////            robot.updateSensorTelemetry();
 ////            telemetry.update();
+///        if(controller hits LT) {
+///         robot.grabBlock();
+//        }
+
+////     if(controller hits RT) {
+//        robot.dropBlock();
+//        }
 ////        }
 //
 //    }

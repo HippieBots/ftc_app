@@ -42,33 +42,40 @@ public class MecanumTeleop extends OpMode {
 
     private void g1Loop(Controller g) {
         DriverHelper.drive(g, robot);
+        if (g1.left_trigger > .2) {
+            robot.grabBlock();
+        }
+        if (g1.leftBumperOnce()) {
+            robot.grabBlock();
+        }
 
+        if (g1.right_trigger > .2) {
+            robot.dropBlock();
+
+        }
+        if (g1.rightBumperOnce()) {
+            robot.dropBlock();
+        }
+
+        if (g1.A()) {
+            robot.lifterUp();
+        } else if (g1.B()) {
+            robot.lifterDown();
+        } else {
+            robot.lifterStop();
+        }
     }
 
-//    private void g2Loop(Controller g) {
-//        if (g.X()) {
-//            robot.setBackPower(-1.0);
-//        } else if (g.Y()) {
-//            robot.setBackPower(1.0);
-//        } else {
-//            robot.setBackPower(0.0);
-//        }
-//
-//        if (g.A()) {
-//            robot.setFrontPower(-1.0);
-//        } else if (g.B()) {
-//            robot.setFrontPower(1.0);
-//        } else {
-//            robot.setFrontPower(0.0);
-//        }
-//
-//    }
+    private void g2Loop(Controller g) {
+    }
 
     @Override
     public void loop() {
         g1.update();
         g2.update();
-        DriverHelper.drive(g1,robot);
+        g1Loop(g1);
+
+
 //        if (debug_mode) {
 //            robot.updateSensorTelemetry();
 //            telemetry.update();

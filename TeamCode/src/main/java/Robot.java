@@ -21,7 +21,8 @@ import java.util.Locale;
  */
 
 public class Robot {
-    private DcMotor lf, rf, lb, rb;
+    private DcMotor lf, rf, lb, rb, grabber;
+    Servo lg, rg;
     private double lastG;
     //private Telemetry telemetry;
     //private BNO055IMU imu;
@@ -34,15 +35,45 @@ public class Robot {
 
         //colorReader = h.servo.get("color sensor");
 
+
         lf = h.dcMotor.get("lf");
         lb = h.dcMotor.get("lb");
         rf = h.dcMotor.get("rf");
         rb = h.dcMotor.get("rb");
+        lg = h.servo.get("lg");
+        rg = h.servo.get("rg");
+        grabber = h.dcMotor.get("grabber");
+        
 
         lf.setDirection(DcMotor.Direction.REVERSE);
         lb.setDirection(DcMotor.Direction.REVERSE);
-
     }
+
+
+
+
+    public void grabBlock() {
+        lg.setPosition(.82);
+        rg.setPosition(.14);
+    }
+
+    public void dropBlock() {
+        lg.setPosition(.6);
+        rg.setPosition(.3);
+    }
+
+    public void lifterUp() {
+        grabber.setPower(1.0);
+    }
+
+    public void lifterDown() {
+        grabber.setPower(-1.0);
+    }
+
+    public void lifterStop() {
+        grabber.setPower(0.0);
+    }
+
 
 //    private void initilizeGyro() {
 //        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
