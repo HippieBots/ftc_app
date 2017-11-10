@@ -12,8 +12,8 @@ public class ParkingAutonomous extends LinearOpMode {
         final Robot robot = new Robot(hardwareMap);
         waitForStart();
 
-        robot.drive(1.0, 1.0, 0.0);
-        sleep(3000);
+        robot.drive(0, .6, 0.0);
+        sleep(1000);
         robot.stopDriveMotors();
     }
 }
