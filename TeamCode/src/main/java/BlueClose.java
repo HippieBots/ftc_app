@@ -20,12 +20,21 @@ public class BlueClose extends LinearOpMode {
         sleep(300);
         robot.lifterStop();
         robot.drive(Math.PI / 2, .6, 0.0);
-        sleep(3000);
+        sleep(2200);
         robot.drive(0, .3, 0.0);
-        sleep(400);
+        sleep(800);
         robot.dropBlock();
         robot.drive(Math.PI, .3, 0.0);
+        sleep(300);
+        robot.lifterDown();
         sleep(100);
+        robot.lifterStop();
+        robot.grabBlock();
+        robot.drive(0, .3, 0.0);
+        sleep(900);
+        robot.drive(Math.PI, .3, 0.0);
+        sleep(250);
+
         robot.stopDriveMotors();
     }
 }

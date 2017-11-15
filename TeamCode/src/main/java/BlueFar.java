@@ -22,12 +22,22 @@ public class BlueFar extends LinearOpMode {
         robot.drive(0, .5, 0.0);
         sleep(600);
         robot.drive(Math.PI / 2, .6, 0.0);
-        sleep(1100);
+        sleep(1000);
         robot.drive(0, .3, 0.0);
-        sleep(400);
+        sleep(650);
         robot.dropBlock();
         robot.drive(Math.PI, .3, 0.0);
+        sleep(400);
+        robot.lifterDown();
         sleep(100);
+        robot.lifterStop();
+        robot.grabBlock();
+        robot.drive(0, .3, 0.0);
+        sleep(900);
+        robot.drive(Math.PI, .3, 0.0);
+        sleep(200);
+
+
         robot.stopDriveMotors();
     }
 }
