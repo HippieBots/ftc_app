@@ -22,7 +22,7 @@ public class RedFar extends LinearOpMode {
         robot.drive(0, .5, 0.0);
         sleep(800);
         robot.drive(3 * Math.PI / 2, .6, 0.0);
-        sleep(900);
+        sleep(1000);
         robot.drive(0, .3, 0.0);
         sleep(800);
         robot.dropBlock();
