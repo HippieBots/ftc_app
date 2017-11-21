@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class RedFar extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        final Robot robot = new Robot(hardwareMap);
+        final Robot robot = new Robot(hardwareMap, telemetry);
         waitForStart();
 
         robot.grabBlock();

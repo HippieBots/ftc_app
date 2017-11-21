@@ -1,9 +1,11 @@
-//import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -20,17 +22,18 @@ import java.util.Locale;
  * Created by pflores on 9/19/17.
  */
 
-public class Robot {
+public class Robot  {
     private DcMotor lf, rf, lb, rb, grabber;
-    Servo lg, rg;
+    private Servo lg, rg;
     private double lastG;
-    //private Telemetry telemetry;
-    //private BNO055IMU imu;
+    private Telemetry telemetry;
+    private BNO055IMU imu;
     //private ColorSensor redVsBlue;
     //private Servo colorReader;
-    public Robot(HardwareMap h) {
-       //imu = h.get(BNO055IMU.class, "gyro");
-        // initilizeGyro();
+    public Robot(HardwareMap h, Telemetry _telemetry) {
+        _telemetry = _telemetry;
+        imu = h.get(BNO055IMU.class, "imu");
+        initilizeGyro();
         //redVsBlue = h.colorSensor.get("redVsBlue");
 
         //colorReader = h.servo.get("color sensor");
@@ -47,6 +50,11 @@ public class Robot {
 
         lf.setDirection(DcMotor.Direction.REVERSE);
         lb.setDirection(DcMotor.Direction.REVERSE);
+
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 
@@ -75,27 +83,49 @@ public class Robot {
     }
 
 
-//    private void initilizeGyro() {
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-//        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-//        parameters.loggingEnabled      = true;
-//        parameters.loggingTag          = "IMU";
-//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-//        imu.initialize(parameters);
-//    }
+    private void initilizeGyro() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu.initialize(parameters);
+    }
 
-//    public void resetGyro() {
-//        lastG = getGyroRaw();
-//    }
-//    public double getGyroRaw() {
-//        Orientation angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-//        return angles.firstAngle;
-//    }
-//    public double getGyro(){
-//        return (getGyroRaw()-lastG)* (2.0 * Math.PI);
-//    }
+    public void resetGyro() {
+        lastG = getGyroRaw();
+    }
+
+    public double getGyroRaw() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        return angles.firstAngle;
+    }
+
+    public double getGyro() {
+        return (getGyroRaw() - lastG) % (2.0 * Math.PI);
+    }
+
+    public double getGyroDeg() {
+        return Math.toDegrees(getGyro());
+    }
+
+    public boolean isGyroCalibrated() {
+        return imu.isSystemCalibrated();
+    }
+
+    public double getHeadingRadians() {
+        return getGyro();
+    }
+
+    public double getHeadingDeg() {
+        return (double) getGyroDeg();
+    }
+
+    public void resetHeading() {
+        lastG = getGyroRaw();
+    }
 
 //    private void readColor() {
 //        if(getLight() >= 200) { //sensor reads white
@@ -128,6 +158,9 @@ public class Robot {
             m.setPower(p);
         }
     }
+    public void setPowerNew(double p){
+        setPower(p, lf, lb, rb, rf);
+    }
 
     public void setMotorMode(DcMotor.RunMode mode, DcMotor... ms) {
         for (DcMotor m :ms) {
@@ -135,7 +168,7 @@ public class Robot {
         }
     }
 
-    private static final double ENCODER_DRIVE_POWER = .3; // .35;
+
     public void setEncoderTargets(int lfs, int lbs, int rfs, int rbs) {
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rb, rf);
         lf.setTargetPosition(lfs);
@@ -159,6 +192,19 @@ public class Robot {
 //            m.setTargetPosition(pos);
 //        }
 //    }
+
+    private void setMode(DcMotor.RunMode mode, DcMotor... ms) {
+        for (DcMotor m : ms) {
+            m.setMode(mode);
+        }
+    }
+
+
+    private void setTargetPosition(int pos, DcMotor... ms) {
+        for (DcMotor m : ms) {
+            m.setTargetPosition(pos);
+        }
+    }
 
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
     private boolean busy(DcMotor... ms) {
@@ -190,21 +236,57 @@ public class Robot {
         rf.setPower(0.0);
         rb.setPower(0.0);
     }
-    //    public void setFrontPower(double p) { pf.setPower(p); }
-//    public void setBackPower(double p) { pr.setPower(p); }
-//    public void updateSensorTelemetry() {
-//
-//        telemetry.addData("EncodersC", String.format(Locale.US, "%d\t%d\t%d\t%d\t%d",
-//                lf.getCurrentPosition(),
-//                lb.getCurrentPosition(),
-//                rf.getCurrentPosition(),
-//                rb.getCurrentPosition()));
-//        telemetry.addData("EncodersT", String.format(Locale.US, "%d\t%d\t%d\t%d\t%d",
-//                lf.getTargetPosition(),
-//                lb.getTargetPosition(),
-//                rf.getTargetPosition(),
-//                rb.getTargetPosition()));
+
+    private static final double ENCODER_DRIVE_POWER = .25;
+
+    public static final double TICKS_PER_REV = 1120;
+    public static final double WHEEL_DIAMETER = 4.0;
+    public static final double TICKS_PER_INCH = TICKS_PER_REV*(16. / 24.) / (int)(WHEEL_DIAMETER * Math.PI);
+    private static final double TICKS_PER_CM = TICKS_PER_INCH/2.54;
+
+    private double encoder_drive_power = ENCODER_DRIVE_POWER;
+
+    void setEncoderDrivePower(double p) {
+        encoder_drive_power = p;
+    }
+
+//    public void setEncoderDrivePower(double p){
+//        setPower(p,lf, lb, rb, rf);
 //    }
+
+    void clearEncoderDrivePower() {
+        encoder_drive_power = ENCODER_DRIVE_POWER;
+    }
+
+    private int averageRemainingTicks(DcMotor... ms) {
+        int total = 0;
+        int count = 0;
+        for (DcMotor m : ms) {
+            if (m.getMode() == DcMotor.RunMode.RUN_TO_POSITION && 100 < Math.abs(m.getTargetPosition())) {
+                total += Math.abs(m.getTargetPosition() - m.getCurrentPosition());
+                count += 1;
+            }
+        }
+        return 0 == count ? 0 : total / count;
+    }
+
+    private static int SLOW_DOWN_HERE = 1120;
+    private static double ARBITRARY_SLOW_SPEED = .3;
+    private boolean slowedDown = false;
+
+    private void encoderDriveSlowdown() {
+        if (!slowedDown) {
+            if (lf.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
+                int remaining = averageRemainingTicks(lf, lb, rf, rb);
+                if (remaining < SLOW_DOWN_HERE) {
+                    slowedDown = true;
+                    setPower(ARBITRARY_SLOW_SPEED, lf, lb, rf, rb);
+                }
+            }
+        }
+    }
+
+
 
     private static class Wheels {
         public double lf, lb, rf, rb;
@@ -254,7 +336,48 @@ public class Robot {
         rf.setPower(w.rf);
         lb.setPower(w.lb);
         rb.setPower(w.rb);
-        //telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lb, w.rb));
+
+        telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lb, w.rb));
     }
+
+    public void encoderDriveTiles(double direction, double tiles) {
+        encoderDriveInches(direction, 24.0 * tiles);
+    }
+
+    public void encoderDriveInches(double direction, double inches) {
+        final Wheels w = getWheels(direction, 1.0, 0.0);
+        final int ticks = (int) (inches * TICKS_PER_INCH);
+        encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lb, ticks * w.rb);
+    }
+
+    private void encoderDrive(double lft, double rft, double lrt, double rrt) {
+        encoderDrive((int) lft, (int) rft, (int) lrt, (int) rrt);
+    }
+
+    private void encoderDrive(int lft, int rft, int lrt, int rrt) {
+        setPower(0.0, lf, lb, rf, rb);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
+        setTargetPosition(lft, lf);
+        setTargetPosition(rft, rf);
+        setTargetPosition(lrt, lb);
+        setTargetPosition(rrt, rb);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lb, rb);
+        setPower(ENCODER_DRIVE_POWER, lf, lb, rf, rb);
+        slowedDown = false;
+    }
+
+    public void announceEncoders() {
+        telemetry.addData("LF", lf.getCurrentPosition());
+        telemetry.addData("RF", rf.getCurrentPosition());
+        telemetry.addData("LB", lb.getCurrentPosition());
+        telemetry.addData("RB", rb.getCurrentPosition());
+    }
+
+    public void resetEncoders() {
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
+        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rf, rb);
+    }
+
+
 
 }
