@@ -38,11 +38,10 @@ public class BlueFar extends AutonomousBase {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        final Robot robot = new Robot(hardwareMap, telemetry);
 //        public void initialize(hardwareMap, telemetry) {
 //            robot = new Robot(hardwareMap, telemetry);
 //        }
-        //initialize(hardwareMap, telemetry);
+        initialize(hardwareMap, telemetry);
 
         final VisionTargets vt = new VisionTargets();
         vt.initFrontCamera(this);
@@ -63,11 +62,15 @@ public class BlueFar extends AutonomousBase {
         robot.lifterUp();
         sleep(300);
         robot.lifterStop();
-        driveDirectionTiles(0,1);
-        driveDirectionTiles(0,.5+ADJ);
-        driveDirectionTiles(0,.6);
+        driveDirectionTiles(0,  1, 0.5);
+        driveDirectionTiles(90, 1+ADJ, .5);
+        driveDirectionTiles(0, .6, .5);
         robot.dropBlock();
-        driveDirectionTiles(180,.5);
+        driveDirectionTiles(Math.PI, .5,.5);
         robot.grabBlock();
+        driveDirectionTiles(0, .7,.5);
+        driveDirectionTiles(Math.PI, .1,.5);
+
+
     }
 }
