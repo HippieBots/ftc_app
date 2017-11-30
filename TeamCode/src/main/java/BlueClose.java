@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class BlueClose extends AutonomousBase {
 
-    public double ADJ =0.0;
+    public double ADJ;
 
     protected void adjustDriveDistance(final RelicRecoveryVuMark v) {
         if (RelicRecoveryVuMark.LEFT == v) {
@@ -32,17 +32,18 @@ public class BlueClose extends AutonomousBase {
 
         } else if (RelicRecoveryVuMark.RIGHT == v) {
             ADJ = 0.25;
+
+        } else if (RelicRecoveryVuMark.CENTER == v) {
+            ADJ = 0.0;
         }
-        ADJ = 0.0;
     }
     @Override
     public void runOpMode() throws InterruptedException {
 
-        final Robot robot = new Robot(hardwareMap, telemetry);
 //        public void initialize(hardwareMap, telemetry) {
 //            robot = new Robot(hardwareMap, telemetry);
 //        }
-        //initialize(hardwareMap, telemetry);
+        initialize(hardwareMap, telemetry);
 
         final VisionTargets vt = new VisionTargets();
         vt.initFrontCamera(this);
@@ -61,14 +62,29 @@ public class BlueClose extends AutonomousBase {
         //get Jewel
         robot.grabBlock();
         robot.lifterUp();
-        sleep(300);
+        sleep(400);
         robot.lifterStop();
-        driveDirectionTiles(0,(1.5+ADJ),0.5);
-        turnDeg(-90);
-        driveDirectionTiles(0,.5,0.5);
+        driveDirectionTiles(0,1.85+ADJ,0.5);
+        turnDeg(90);
+        robot.drive (0,.3,0);
+        sleep(1100);
         robot.dropBlock();
-        driveDirectionTiles(180,.5,0.5);
+        robot.drive(Math.PI, .3, 0.0);
+        sleep(600);
         robot.grabBlock();
+        robot.drive(0, .3, 0.0);
+        sleep(1200);
+        robot.drive(Math.PI, .3, 0.0);
+        sleep(250);
+
+
+        //driveDirectionTiles(0,.5,0.5);
+        //robot.dropBlock();
+        //driveDirectionTiles(180,.5,0.5);
+        //robot.grabBlock();
+        //driveDirectionTiles(0,.5,0.5);
+        //driveDirectionTiles(180,.1,0.5);
+
 
 
 
