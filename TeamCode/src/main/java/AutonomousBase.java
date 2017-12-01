@@ -31,6 +31,8 @@ public abstract class AutonomousBase extends LinearOpMode  {
     private static final int STUPID_TURN_THRESHOLD = 60;
 
     private double angleDifference(double from, double to) {
+        from = Math.toRadians(from);
+        to = Math.toRadians(to);
         if (from < 0) from += 2*Math.PI;
         if (to < 0) to += 2*Math.PI;
 
@@ -69,6 +71,7 @@ public abstract class AutonomousBase extends LinearOpMode  {
     }
     protected void turnDeg(double degrees) throws InterruptedException {
         robot.resetGyro();
+
         turnToAngleDeg(degrees);
     }
     protected void driveDirectionTiles(double directionDegrees, double tiles) throws InterruptedException {
@@ -78,7 +81,7 @@ public abstract class AutonomousBase extends LinearOpMode  {
         robot.setPowerNew(power);
         robot.encoderDriveTiles(directionDegrees, tiles);
         while (opModeIsActive() && robot.driveMotorsBusy()) {
-            //robot.updateSensorTelemetry();
+            robot.announceEncoders();
             telemetry.update();
             idle();
         }

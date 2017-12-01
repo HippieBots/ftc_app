@@ -64,10 +64,10 @@ public class BlueClose extends AutonomousBase {
         robot.lifterUp();
         sleep(400);
         robot.lifterStop();
-        driveDirectionTiles(0,1.85+ADJ,0.5);
+        driveDirectionTiles(0,1.85 + ADJ,0.5);
         turnDeg(90);
         robot.drive (0,.3,0);
-        sleep(1100);
+        sleep(1200);
         robot.dropBlock();
         robot.drive(Math.PI, .3, 0.0);
         sleep(600);
@@ -75,7 +75,7 @@ public class BlueClose extends AutonomousBase {
         robot.drive(0, .3, 0.0);
         sleep(1200);
         robot.drive(Math.PI, .3, 0.0);
-        sleep(250);
+        sleep(450);
 
 
         //driveDirectionTiles(0,.5,0.5);

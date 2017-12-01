@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
@@ -30,8 +31,8 @@ public class Robot  {
     private BNO055IMU imu;
     //private ColorSensor redVsBlue;
     //private Servo colorReader;
-    public Robot(HardwareMap h, Telemetry _telemetry) {
-        _telemetry = _telemetry;
+    public Robot(HardwareMap h, Telemetry telemetry) {
+        this.telemetry = telemetry;
         imu = h.get(BNO055IMU.class, "imu");
         initilizeGyro();
         //redVsBlue = h.colorSensor.get("redVsBlue");
@@ -61,13 +62,13 @@ public class Robot  {
 
 
     public void grabBlock() {
-        lg.setPosition(.82);
-        rg.setPosition(.10);
+        lg.setPosition(.80);
+        rg.setPosition(.08);
     }
 
     public void dropBlock() {
-        lg.setPosition(.64);
-        rg.setPosition(.25);
+        lg.setPosition(.97);
+        rg.setPosition(.02);
     }
 
     public void lifterUp() {
@@ -127,25 +128,6 @@ public class Robot  {
         lastG = getGyroRaw();
     }
 
-//    private void readColor() {
-//        if(getLight() >= 200) { //sensor reads white
-//            red = true;
-//        }
-//        if(getLight() >= 200) {
-//            blue = true;
-//        }
-//    }
-//
-//
-//    public boolean red = false;
-//    public boolean blue = false;
-//
-//    public int getLight() {
-//        return redVsBlue.alpha();
-//    }
-
-
-
     public void setMotorSpeeds(double lfs, double lbs, double rfs, double rbs){
         lf.setPower(lfs);
         lb.setPower(lbs);
@@ -168,37 +150,16 @@ public class Robot  {
         }
     }
 
-
-    public void setEncoderTargets(int lfs, int lbs, int rfs, int rbs) {
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rb, rf);
-        lf.setTargetPosition(lfs);
-        lb.setTargetPosition(lbs);
-        rf.setTargetPosition(rfs);
-        rb.setTargetPosition(rbs);
-        setMotorMode(DcMotor.RunMode.RUN_TO_POSITION, lf, lb, rb, rf);
-        setPower(ENCODER_DRIVE_POWER, lf, lb, rf, rb);
-        while(busy(lf, lb, rf, rb)){
-            //wait(); // wait, it this right? I keep getting errors
-        }
-        setPower(0.0, lf, lb, rf, rb);
-        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rb, rf);
-    }
     public void resetDriveMotorModes() {
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
         setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rf, rb);
     }
-    //    private void setTargetPosition(int pos, DcMotor... ms) { //we probably don't need this
-//        for (DcMotor m : ms) {
-//            m.setTargetPosition(pos);
-//        }
-//    }
 
     private void setMode(DcMotor.RunMode mode, DcMotor... ms) {
         for (DcMotor m : ms) {
             m.setMode(mode);
         }
     }
-
 
     private void setTargetPosition(int pos, DcMotor... ms) {
         for (DcMotor m : ms) {
@@ -211,7 +172,9 @@ public class Robot  {
         int total = 0;
         for (DcMotor m : ms) {
             if (m.isBusy()) {
-                total += Math.abs(m.getCurrentPosition() - m.getTargetPosition());
+                final int c = Math.abs(m.getCurrentPosition());
+                final int t = Math.abs(m.getTargetPosition());
+                total += c < t ? (t - c) : 0;
             }
         }
         return total > ENCODERS_CLOSE_ENOUGH;
@@ -246,14 +209,6 @@ public class Robot  {
 
     private double encoder_drive_power = ENCODER_DRIVE_POWER;
 
-    void setEncoderDrivePower(double p) {
-        encoder_drive_power = p;
-    }
-
-//    public void setEncoderDrivePower(double p){
-//        setPower(p,lf, lb, rb, rf);
-//    }
-
     void clearEncoderDrivePower() {
         encoder_drive_power = ENCODER_DRIVE_POWER;
     }
@@ -271,7 +226,7 @@ public class Robot  {
     }
 
     private static int SLOW_DOWN_HERE = 1120;
-    private static double ARBITRARY_SLOW_SPEED = .3;
+    private static double ARBITRARY_SLOW_SPEED = .4;
     private boolean slowedDown = false;
 
     private void encoderDriveSlowdown() {
@@ -344,33 +299,36 @@ public class Robot  {
         encoderDriveInches(direction, 24.0 * tiles);
     }
 
+
+    //Make pattern lf lb rf rb ?? possible solution
+
     public void encoderDriveInches(double direction, double inches) {
         final Wheels w = getWheels(direction, 1.0, 0.0);
         final int ticks = (int) (inches * TICKS_PER_INCH);
-        encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lb, ticks * w.rb);
+        encoderDrive(ticks * w.lf, ticks * w.lb, ticks * w.rf, ticks * w.rb);
     }
 
-    private void encoderDrive(double lft, double rft, double lrt, double rrt) {
-        encoderDrive((int) lft, (int) rft, (int) lrt, (int) rrt);
+    private void encoderDrive(double lft, double lrt, double rft, double rrt) {
+        encoderDrive((int) lft, (int) lrt, (int) rft, (int) rrt);
     }
 
-    private void encoderDrive(int lft, int rft, int lrt, int rrt) {
+    private void encoderDrive(int lft, int lbt, int rft, int rrt) {
         setPower(0.0, lf, lb, rf, rb);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
         setTargetPosition(lft, lf);
+        setTargetPosition(lbt, lb);
         setTargetPosition(rft, rf);
-        setTargetPosition(lrt, lb);
         setTargetPosition(rrt, rb);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lb, rb);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, lb, rf, rb);
         setPower(ENCODER_DRIVE_POWER, lf, lb, rf, rb);
         slowedDown = false;
     }
 
     public void announceEncoders() {
-        telemetry.addData("LF", lf.getCurrentPosition());
-        telemetry.addData("RF", rf.getCurrentPosition());
-        telemetry.addData("LB", lb.getCurrentPosition());
-        telemetry.addData("RB", rb.getCurrentPosition());
+        telemetry.addData("LF", lf.getCurrentPosition() + ", " + lb.getTargetPosition());
+        telemetry.addData("RF", rf.getCurrentPosition() + ", " + rf.getTargetPosition());
+        telemetry.addData("LB", lb.getCurrentPosition() + ", " + lb.getTargetPosition());
+        telemetry.addData("RB", rb.getCurrentPosition() + ", " + rb.getTargetPosition());
     }
 
     public void resetEncoders() {
@@ -378,6 +336,11 @@ public class Robot  {
         setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rf, rb);
     }
 
+    private Orientation orientation;
+    private Velocity velocity;
+    public void loop() {
+        orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+    }
 
 
 }

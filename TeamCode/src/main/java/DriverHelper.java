@@ -10,7 +10,7 @@ public class DriverHelper {
     // assumes that the controller is updated
     static void drive(Controller g, Robot robot) {
         double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
-        final double dpad_speed = 0.3;
+        final double dpad_speed = 0.5;
 
         if (g.dpadUp()) {
             theta = 0.0;
