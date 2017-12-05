@@ -13,7 +13,7 @@ public abstract class AutonomousBase extends LinearOpMode  {
     protected Robot robot;
 
     public void initialize(HardwareMap hm, Telemetry telemetry) {
-        robot = new Robot(hm, telemetry);
+    robot = new Robot(hm, telemetry);
     }
 
     public void onStart() {

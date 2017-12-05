@@ -62,8 +62,8 @@ public class Robot  {
 
 
     public void grabBlock() {
-        lg.setPosition(.80);
-        rg.setPosition(.08);
+        lg.setPosition(.70);
+        rg.setPosition(.18);
     }
 
     public void dropBlock() {

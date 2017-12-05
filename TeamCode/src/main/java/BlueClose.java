@@ -62,20 +62,23 @@ public class BlueClose extends AutonomousBase {
         //get Jewel
         robot.grabBlock();
         robot.lifterUp();
-        sleep(400);
+        sleep(250);
         robot.lifterStop();
-        driveDirectionTiles(0,1.85 + ADJ,0.5);
+        driveDirectionTiles(0,1.9 + ADJ,0.5);
         turnDeg(90);
         robot.drive (0,.3,0);
         sleep(1200);
         robot.dropBlock();
         robot.drive(Math.PI, .3, 0.0);
-        sleep(600);
+        sleep(800);
+        robot.lifterDown();
+        sleep(150);
+        robot.lifterStop();
         robot.grabBlock();
         robot.drive(0, .3, 0.0);
-        sleep(1200);
+        sleep(1000);
         robot.drive(Math.PI, .3, 0.0);
-        sleep(450);
+        sleep(400);
 
 
         //driveDirectionTiles(0,.5,0.5);

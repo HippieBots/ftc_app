@@ -20,21 +20,21 @@ public class RedClose extends LinearOpMode {
         robot.lifterUp();
         sleep(300);
         robot.lifterStop();
-        robot.drive(3 * Math.PI / 2, .85, 0.0);
-        sleep(2400);
+        robot.drive(3 * Math.PI / 2, .8, 0.0);
+        sleep(2500);
         robot.drive(0, .3, 0.0);
-        sleep(1000);
+        sleep(1100);
         robot.dropBlock();
         robot.drive(Math.PI, .3, 0.0);
         sleep(300);
         robot.lifterDown();
-        sleep(100);
+        sleep(150);
         robot.lifterStop();
         robot.grabBlock();
-        robot.drive(0, .6, 0.0);
+        robot.drive(0, .3, 0.0);
         sleep(900);
         robot.drive(Math.PI, .3, 0.0);
-        sleep(300);
+        sleep(450);
 
         robot.stopDriveMotors();
     }
