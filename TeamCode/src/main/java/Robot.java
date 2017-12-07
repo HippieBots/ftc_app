@@ -23,8 +23,12 @@ import java.util.Locale;
  * Created by pflores on 9/19/17.
  */
 
+/*
+FOR THE SAKE OF SAM'S SANITY THE ORDER OF MOTORS IS: lf, lb, rf, rb (REMEMBER LEFT IS ALWAYS FIRST)
+ */
+
 public class Robot  {
-    private DcMotor lf, rf, lb, rb, grabber;
+    private DcMotor lf, lb, rf, rb, grabber;
     private Servo lg, rg;
     private double lastG;
     private Telemetry telemetry;
@@ -141,7 +145,7 @@ public class Robot  {
         }
     }
     public void setPowerNew(double p){
-        setPower(p, lf, lb, rb, rf);
+        setPower(p, lf, lb, rf, rb);
     }
 
     public void setMotorMode(DcMotor.RunMode mode, DcMotor... ms) {
@@ -184,18 +188,17 @@ public class Robot  {
 
     }
     public void onStart() {
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rb, rf);
-        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rb, rf);
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
+        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rf, rb);
     }
 
     public void onStop() {
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rb, rf);
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
         stopDriveMotors();
     }
     public void stopDriveMotors() {
         lf.setPower(0.0);
         lb.setPower(0.0);
-
         rf.setPower(0.0);
         rb.setPower(0.0);
     }
@@ -207,7 +210,12 @@ public class Robot  {
     public static final double TICKS_PER_INCH = TICKS_PER_REV*(16. / 24.) / (int)(WHEEL_DIAMETER * Math.PI);
     private static final double TICKS_PER_CM = TICKS_PER_INCH/2.54;
 
+    void setEncoderDrivePower(double p) {
+        encoder_drive_power = p;
+    }
+
     private double encoder_drive_power = ENCODER_DRIVE_POWER;
+
 
     void clearEncoderDrivePower() {
         encoder_drive_power = ENCODER_DRIVE_POWER;
@@ -246,10 +254,10 @@ public class Robot  {
     private static class Wheels {
         public double lf, lb, rf, rb;
 
-        public Wheels(double lf, double rf, double lb, double rb) {
+        public Wheels(double lf, double lb, double rf, double rb) {
             this.lf = lf;
-            this.rf = rf;
             this.lb = lb;
+            this.rf = rf;
             this.rb = rb;
         }
     }
@@ -288,11 +296,11 @@ public class Robot  {
     public void drive(double direction, double velocity, double rotationVelocity) {
         Wheels w = getWheels(direction, velocity, rotationVelocity);
         lf.setPower(w.lf);
-        rf.setPower(w.rf);
         lb.setPower(w.lb);
+        rf.setPower(w.rf);
         rb.setPower(w.rb);
 
-        telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lb, w.rb));
+        telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.lb, w.rf, w.rb));
     }
 
     public void encoderDriveTiles(double direction, double tiles) {
@@ -300,7 +308,7 @@ public class Robot  {
     }
 
 
-    //Make pattern lf lb rf rb ?? possible solution
+    //Make pattern lf lb rf rb
 
     public void encoderDriveInches(double direction, double inches) {
         final Wheels w = getWheels(direction, 1.0, 0.0);
@@ -308,26 +316,26 @@ public class Robot  {
         encoderDrive(ticks * w.lf, ticks * w.lb, ticks * w.rf, ticks * w.rb);
     }
 
-    private void encoderDrive(double lft, double lrt, double rft, double rrt) {
-        encoderDrive((int) lft, (int) lrt, (int) rft, (int) rrt);
+    private void encoderDrive(double lft, double lbt, double rft, double rbt) {
+        encoderDrive((int) lft, (int) lbt, (int) rft, (int) rbt);
     }
 
-    private void encoderDrive(int lft, int lbt, int rft, int rrt) {
+    private void encoderDrive(int lft, int lbt, int rft, int rbt) {
         setPower(0.0, lf, lb, rf, rb);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
         setTargetPosition(lft, lf);
         setTargetPosition(lbt, lb);
         setTargetPosition(rft, rf);
-        setTargetPosition(rrt, rb);
+        setTargetPosition(rbt, rb);
         setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, lb, rf, rb);
         setPower(ENCODER_DRIVE_POWER, lf, lb, rf, rb);
         slowedDown = false;
     }
 
     public void announceEncoders() {
-        telemetry.addData("LF", lf.getCurrentPosition() + ", " + lb.getTargetPosition());
-        telemetry.addData("RF", rf.getCurrentPosition() + ", " + rf.getTargetPosition());
+        telemetry.addData("LF", lf.getCurrentPosition() + ", " + lf.getTargetPosition());
         telemetry.addData("LB", lb.getCurrentPosition() + ", " + lb.getTargetPosition());
+        telemetry.addData("RF", rf.getCurrentPosition() + ", " + rf.getTargetPosition());
         telemetry.addData("RB", rb.getCurrentPosition() + ", " + rb.getTargetPosition());
     }
 
