@@ -45,16 +45,10 @@ public class MecanumTeleop extends OpMode {
         if (g1.left_trigger > .2) {
             robot.grabBlock();
         }
-        if (g1.leftBumperOnce()) {
-            robot.grabBlock();
-        }
 
         if (g1.right_trigger > .2) {
             robot.dropBlock();
 
-        }
-        if (g1.rightBumperOnce()) {
-            robot.dropBlock();
         }
 
         if (g1.A()) {

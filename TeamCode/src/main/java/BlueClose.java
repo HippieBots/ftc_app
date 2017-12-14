@@ -26,15 +26,17 @@ public class BlueClose extends AutonomousBase {
 
     public double ADJ;
 
-    protected void adjustDriveDistance(final RelicRecoveryVuMark v) {
+    protected double adjustDriveDistance(final RelicRecoveryVuMark v) {
         if (RelicRecoveryVuMark.LEFT == v) {
-            ADJ = -0.25;
+            return ADJ = -0.6;
 
         } else if (RelicRecoveryVuMark.RIGHT == v) {
-            ADJ = 0.25;
+            return ADJ = 0.6;
 
         } else if (RelicRecoveryVuMark.CENTER == v) {
-            ADJ = 0.0;
+            return ADJ = 0.0;
+        }else{
+            return ADJ = 0.0;
         }
     }
     @Override
@@ -64,8 +66,8 @@ public class BlueClose extends AutonomousBase {
         robot.lifterUp();
         sleep(250);
         robot.lifterStop();
-        driveDirectionTiles(0,1.9 + ADJ,0.5);
-        turnDeg(90);
+        driveDirectionTiles(0,(1.9 + adjustDriveDistance(target)),0.5);
+        turnRad((Math.PI / 2.0));
         robot.drive (0,.3,0);
         sleep(1200);
         robot.dropBlock();

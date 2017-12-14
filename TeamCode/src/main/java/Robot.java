@@ -188,12 +188,12 @@ public class Robot  {
 
     }
     public void onStart() {
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
-        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rf, rb);
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rb, rf);
+        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lb, rb, rf);
     }
 
     public void onStop() {
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rb, rf);
         stopDriveMotors();
     }
     public void stopDriveMotors() {
@@ -254,7 +254,7 @@ public class Robot  {
     private static class Wheels {
         public double lf, lb, rf, rb;
 
-        public Wheels(double lf, double lb, double rf, double rb) {
+        public Wheels(double lf, double rf, double lb, double rb) {
             this.lf = lf;
             this.lb = lb;
             this.rf = rf;
@@ -313,23 +313,21 @@ public class Robot  {
     public void encoderDriveInches(double direction, double inches) {
         final Wheels w = getWheels(direction, 1.0, 0.0);
         final int ticks = (int) (inches * TICKS_PER_INCH);
-        encoderDrive(ticks * w.lf, ticks * w.lb, ticks * w.rf, ticks * w.rb);
+        encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lb, ticks * w.rb);
+    }
+    private void encoderDrive(double lft, double rft, double lrt, double rrt) {
+        encoderDrive((int) lft, (int) rft, (int) lrt, (int) rrt);
     }
 
-    private void encoderDrive(double lft, double lbt, double rft, double rbt) {
-        encoderDrive((int) lft, (int) lbt, (int) rft, (int) rbt);
-    }
-
-    private void encoderDrive(int lft, int lbt, int rft, int rbt) {
+    private void encoderDrive(int lft, int rft, int lrt, int rrt) {
         setPower(0.0, lf, lb, rf, rb);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lb, rf, rb);
         setTargetPosition(lft, lf);
-        setTargetPosition(lbt, lb);
         setTargetPosition(rft, rf);
-        setTargetPosition(rbt, rb);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, lb, rf, rb);
-        setPower(ENCODER_DRIVE_POWER, lf, lb, rf, rb);
-        slowedDown = false;
+        setTargetPosition(lrt, lb);
+        setTargetPosition(rrt, rb);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lb, rb);
+        setPower(encoder_drive_power, lf, lb, rf, rb);
     }
 
     public void announceEncoders() {
