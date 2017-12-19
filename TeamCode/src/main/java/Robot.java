@@ -24,7 +24,7 @@ import java.util.Locale;
  */
 
 /*
-FOR THE SAKE OF SAM'S SANITY THE ORDER OF MOTORS IS: lf, lb, rf, rb (REMEMBER LEFT IS ALWAYS FIRST)
+THE ORDER OF MOTORS IS: lf, lb, rf, rb (REMEMBER LEFT IS ALWAYS FIRST)
  */
 
 public class Robot  {
@@ -67,7 +67,7 @@ public class Robot  {
 
     public void grabBlock() {
         lg.setPosition(.70);
-        rg.setPosition(.18);
+        rg.setPosition(.20);
     }
 
     public void dropBlock() {

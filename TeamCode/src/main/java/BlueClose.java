@@ -28,10 +28,10 @@ public class BlueClose extends AutonomousBase {
 
     protected double adjustDriveDistance(final RelicRecoveryVuMark v) {
         if (RelicRecoveryVuMark.LEFT == v) {
-            return ADJ = -0.6;
+            return ADJ = -0.45;
 
         } else if (RelicRecoveryVuMark.RIGHT == v) {
-            return ADJ = 0.6;
+            return ADJ = 0.45;
 
         } else if (RelicRecoveryVuMark.CENTER == v) {
             return ADJ = 0.0;
@@ -66,7 +66,7 @@ public class BlueClose extends AutonomousBase {
         robot.lifterUp();
         sleep(250);
         robot.lifterStop();
-        driveDirectionTiles(0,(1.9 + adjustDriveDistance(target)),0.5);
+        driveDirectionTiles(0,(2.1 + adjustDriveDistance(target)),0.5);
         turnRad((Math.PI / 2.0));
         robot.drive (0,.3,0);
         sleep(1200);
@@ -80,7 +80,35 @@ public class BlueClose extends AutonomousBase {
         robot.drive(0, .3, 0.0);
         sleep(1000);
         robot.drive(Math.PI, .3, 0.0);
-        sleep(400);
+        sleep(900);
+//get more blocks
+        turnRad((Math.PI / 2.0));
+        turnRad((Math.PI / 2.0));
+        robot.dropBlock();
+        driveDirectionTiles(0,2.2, 0.69);
+        robot.grabBlock();
+        robot.lifterUp();
+        sleep(1200);
+        robot.lifterStop();
+        driveDirectionTiles(Math.PI,1.1, 0.7);
+        turnRad((Math.PI / 2.0));
+        turnRad((Math.PI / 2.0));
+        driveDirectionTiles(0,1.1, 0.5);
+        robot.drive(0, .3, 0.0);
+        sleep(1000);
+        robot.lifterDown();
+        sleep (600);
+        robot.lifterStop();
+        sleep (100);
+        robot.dropBlock();
+        driveDirectionTiles(Math.PI,.5, 0.2);
+        robot.drive(0, .3, 0.0);
+        sleep (350);
+        driveDirectionTiles(Math.PI,.5, 0.2);
+
+
+
+
 
 
         //driveDirectionTiles(0,.5,0.5);
