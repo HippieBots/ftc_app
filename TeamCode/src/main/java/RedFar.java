@@ -61,6 +61,22 @@ public class RedFar extends AutonomousBase {
         robot.lifterUp();
         sleep(350);
         robot.lifterStop();
+        robot.PutArmDown();
+        sleep(1000);
+
+        if (robot.isRed()){
+            driveDirectionTiles(Math.PI,.2,0.1);
+            driveDirectionTiles(0,.2,0.1);
+
+
+        }else if(!robot.isRed()){
+            driveDirectionTiles(0,.2,0.1);
+            driveDirectionTiles(Math.PI,.2,0.1);
+
+
+        }
+        robot.PutArmUp();
+        sleep(1000);
         driveDirectionTiles(Math.PI,  1.3, 0.5);
         driveDirectionTiles((Math.PI)/2, .85+adjustDriveDistance(target), .5);
         turnRad(Math.PI/2);
