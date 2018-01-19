@@ -60,13 +60,32 @@ public class BlueFar extends AutonomousBase {
 
         final RelicRecoveryVuMark target = vt.getCurrentVuMark();
         vt.close();
-        //get Jewel
+
         robot.grabBlock();
         robot.lifterUp();
         sleep(350);
         robot.lifterStop();
-        driveDirectionTiles(0,  1.2, 0.5);
-        driveDirectionTiles((Math.PI)/2, 1.1+adjustDriveDistance(target), .5);
+        robot.PutArmDown();
+        sleep(1000);
+
+        if (robot.isRed()){
+            driveDirectionTiles(0,.2,0.1);
+            robot.PutArmUp();
+            sleep(1000);
+            driveDirectionTiles(Math.PI,.2,0.1);
+
+        }else if(!robot.isRed()){
+            driveDirectionTiles(Math.PI,.2,0.1);
+            robot.PutArmUp();
+            sleep(1000);
+            driveDirectionTiles(0,.2,0.1);
+
+        }
+        robot.PutArmUp();
+        sleep(1000);
+
+        driveDirectionTiles(0,  1.3, 0.5);
+        driveDirectionTiles((Math.PI)/2, 1.15+adjustDriveDistance(target), .5);
         robot.drive (0,.3,0);
         sleep(1200);
         robot.dropBlock();

@@ -10,10 +10,10 @@ public class Controller {
 
     private int dpad_up, dpad_down, dpad_left, dpad_right;
     private int x, y, a, b;
-    private int left_bumper, right_bumper;
+    private int left_bumper;
 
     public double left_stick_x, right_stick_x, left_stick_y, right_stick_y;
-    public double left_trigger, right_trigger;
+    public double left_trigger, right_trigger, right_bumper;
 
     public Controller(Gamepad g) {
         gamepad = g;

@@ -29,10 +29,11 @@ THE ORDER OF MOTORS IS: lf, lb, rf, rb (REMEMBER LEFT IS ALWAYS FIRST)
 
 public class Robot  {
     private DcMotor lf, lb, rf, rb, grabber;
-    private Servo lg, rg;
+    private Servo lg, rg,top, ja;
     private double lastG;
     private Telemetry telemetry;
     private BNO055IMU imu;
+    private ColorSensor CS;
     //private ColorSensor redVsBlue;
     //private Servo colorReader;
     public Robot(HardwareMap h, Telemetry telemetry) {
@@ -48,10 +49,16 @@ public class Robot  {
         lb = h.dcMotor.get("lb");
         rf = h.dcMotor.get("rf");
         rb = h.dcMotor.get("rb");
+
         lg = h.servo.get("lg");
         rg = h.servo.get("rg");
+        top = h.servo.get("top");
         grabber = h.dcMotor.get("grabber");
-        
+        ja = h.servo.get("ja");
+        CS = h.colorSensor.get("CS");
+
+
+
 
         lf.setDirection(DcMotor.Direction.REVERSE);
         lb.setDirection(DcMotor.Direction.REVERSE);
@@ -68,11 +75,13 @@ public class Robot  {
     public void grabBlock() {
         lg.setPosition(.70);
         rg.setPosition(.20);
+        top.setPosition(.65);
     }
 
     public void dropBlock() {
-        lg.setPosition(.97);
+        lg.setPosition(.85);
         rg.setPosition(.02);
+        top.setPosition(.2);
     }
 
     public void lifterUp() {
@@ -348,5 +357,20 @@ public class Robot  {
         orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
 
+    public boolean isRed(){
+         if(CS.red()>CS.blue()){
+             return true;
+         }
+         else {
 
+             return false;
+         }
+
+    }
+    public void PutArmDown(){
+        ja.setPosition(1.0);
+    }
+    public void PutArmUp() {
+        ja.setPosition(.35);
+    }
 }

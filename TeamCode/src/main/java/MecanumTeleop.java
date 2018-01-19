@@ -22,6 +22,7 @@ public class MecanumTeleop extends OpMode {
 
     public void init_loop() {
         g1.update();
+        g2.update();
 //        if (g1.AOnce()) {
 //            debug_mode = ! debug_mode;
 //        }
@@ -58,9 +59,12 @@ public class MecanumTeleop extends OpMode {
         } else {
             robot.lifterStop();
         }
-    }
 
-    private void g2Loop(Controller g) {
+        if (g1.X()) {
+            robot.PutArmDown();
+        } else if (g1.Y()) {
+            robot.PutArmUp();
+        }
     }
 
     @Override
@@ -68,6 +72,7 @@ public class MecanumTeleop extends OpMode {
         g1.update();
         g2.update();
         g1Loop(g1);
+        //g2Loop(g2);
 
 
 //        if (debug_mode) {

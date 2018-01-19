@@ -66,7 +66,28 @@ public class RedClose extends AutonomousBase {
         robot.lifterUp();
         sleep(250);
         robot.lifterStop();
-        driveDirectionTiles(Math.PI,(1.8 + adjustDriveDistance(target)),0.5);
+
+        robot.PutArmDown();
+        sleep(1000);
+
+        if (robot.isRed()){
+            driveDirectionTiles(Math.PI,.2,0.1);
+            robot.PutArmUp();
+            sleep(1000);
+            driveDirectionTiles(0,.2,0.1);
+
+
+        }else if(!robot.isRed()){
+            driveDirectionTiles(0,.2,0.1);
+            robot.PutArmUp();
+            sleep(1000);
+            driveDirectionTiles(Math.PI,.2,0.1);
+
+
+        }
+
+
+        driveDirectionTiles(Math.PI,(1.9 + adjustDriveDistance(target)),0.5);
         turnRad((Math.PI / 2.0));
         robot.drive (0,.3,0);
         sleep(1200);
@@ -80,7 +101,7 @@ public class RedClose extends AutonomousBase {
         robot.drive(0, .3, 0.0);
         sleep(1150);
         robot.drive(Math.PI, .3, 0.0);
-        sleep(400);
+        sleep(700);
 
 
        // robot.grabBlock();
