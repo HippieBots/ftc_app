@@ -73,13 +73,13 @@ public class Robot  {
 
 
     public void grabBlock() {
-        lg.setPosition(.70);
+        lg.setPosition(.40);
         rg.setPosition(.20);
         top.setPosition(.65);
     }
 
     public void dropBlock() {
-        lg.setPosition(.85);
+        lg.setPosition(.55);
         rg.setPosition(.02);
         top.setPosition(.2);
     }
@@ -368,9 +368,9 @@ public class Robot  {
 
     }
     public void PutArmDown(){
-        ja.setPosition(1.0);
+        ja.setPosition(.86);
     }
     public void PutArmUp() {
-        ja.setPosition(.35);
+        ja.setPosition(.25);
     }
 }
