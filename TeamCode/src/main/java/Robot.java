@@ -368,7 +368,7 @@ public class Robot  {
 
     }
     public void PutArmDown(){
-        ja.setPosition(.86);
+        ja.setPosition(.87);
     }
     public void PutArmUp() {
         ja.setPosition(.25);

@@ -24,10 +24,10 @@ public class RedFar extends AutonomousBase {
 
     protected double adjustDriveDistance(final RelicRecoveryVuMark v) {
         if (RelicRecoveryVuMark.LEFT == v) {
-            return ADJ = 0.45;
+            return ADJ = 0.55;
 
         } else if (RelicRecoveryVuMark.RIGHT == v) {
-            return ADJ = -0.6;
+            return ADJ = -0.35;
         }
         else {
 
@@ -82,7 +82,7 @@ public class RedFar extends AutonomousBase {
         robot.PutArmUp();
         sleep(1000);
         driveDirectionTiles(Math.PI,  1.3, 0.5);
-        driveDirectionTiles((Math.PI)/2, .85+adjustDriveDistance(target), .5);
+        driveDirectionTiles((Math.PI)/2, .65+adjustDriveDistance(target), .5);
         turnRad(Math.PI/2);
         turnRad(Math.PI/2);
         robot.drive (0,.3,0);

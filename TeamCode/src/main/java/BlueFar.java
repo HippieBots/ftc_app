@@ -31,7 +31,7 @@ public class BlueFar extends AutonomousBase {
            return ADJ = -0.71;
 
         } else if (RelicRecoveryVuMark.RIGHT == v) {
-            return ADJ = 0.6;
+            return ADJ = 0.65;
         }
     else {
 
@@ -85,7 +85,7 @@ public class BlueFar extends AutonomousBase {
         sleep(1000);
 
         driveDirectionTiles(0,  1.3, 0.5);
-        driveDirectionTiles((Math.PI)/2, 1.15+adjustDriveDistance(target), .5);
+        driveDirectionTiles((Math.PI)/2, 1.12+adjustDriveDistance(target), .5);
         robot.drive (0,.3,0);
         sleep(1200);
         robot.dropBlock();
