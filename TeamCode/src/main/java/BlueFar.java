@@ -96,7 +96,12 @@ public class BlueFar extends AutonomousBase {
         robot.grabBlock();
         robot.drive (0,.3,0);
         sleep(1300);
-        driveDirectionTiles(Math.PI, .25,.5);
+        driveDirectionTiles(Math.PI, .5,.5);
+        turnRad(135*Math.PI / 100);
+        robot.extendRelicArm(-1);
+        sleep(2600);
+        robot.RelicArmStop();
+
 
 
     }

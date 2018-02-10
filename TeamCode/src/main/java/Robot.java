@@ -28,8 +28,8 @@ THE ORDER OF MOTORS IS: lf, lb, rf, rb (REMEMBER LEFT IS ALWAYS FIRST)
  */
 
 public class Robot  {
-    private DcMotor lf, lb, rf, rb, grabber;
-    private Servo lg, rg,top, ja;
+    private DcMotor lf, lb, rf, rb, grabber, tilt, extend;
+    private Servo lg, rg,top, ja, joint, clasp;
     private double lastG;
     private Telemetry telemetry;
     private BNO055IMU imu;
@@ -49,6 +49,7 @@ public class Robot  {
         lb = h.dcMotor.get("lb");
         rf = h.dcMotor.get("rf");
         rb = h.dcMotor.get("rb");
+        extend = h.dcMotor.get("extend");
 
         lg = h.servo.get("lg");
         rg = h.servo.get("rg");
@@ -57,11 +58,13 @@ public class Robot  {
         ja = h.servo.get("ja");
         CS = h.colorSensor.get("CS");
 
-
-
+        joint = h.servo.get("joint");
+        clasp = h.servo.get("clasp");
+        tilt = h.dcMotor.get("tilt");
 
         lf.setDirection(DcMotor.Direction.REVERSE);
         lb.setDirection(DcMotor.Direction.REVERSE);
+        extend.setDirection(DcMotor.Direction.REVERSE);
 
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,13 +77,13 @@ public class Robot  {
 
     public void grabBlock() {
         lg.setPosition(.40);
-        rg.setPosition(.20);
+        rg.setPosition(.25);
         top.setPosition(.65);
     }
 
     public void dropBlock() {
-        lg.setPosition(.55);
-        rg.setPosition(.02);
+        lg.setPosition(.58);
+        rg.setPosition(.07);
         top.setPosition(.2);
     }
 
@@ -373,4 +376,41 @@ public class Robot  {
     public void PutArmUp() {
         ja.setPosition(.25);
     }
+
+    public void dropRelic() {
+        clasp.setPosition(.8);
+    }
+
+    public void grabRelic() {
+        clasp.setPosition(.53);
+    }
+
+    public void jointDown() {
+        joint.setPosition(1);
+    }
+
+    public void jointUp() {
+        joint.setPosition(0);
+    }
+
+    public void tiltUp() {
+        tilt.setPower(.4);
+    }
+
+    public void tiltDown() {
+        tilt.setPower(-.4);
+    }
+
+    public void stopTilt(){
+        tilt.setPower(0.0);
+    }
+
+    public void extendRelicArm (final double power) {
+        extend.setPower(power);
+    }
+
+    public void RelicArmStop() {
+        extend.setPower(0.0);
+    }
+
 }

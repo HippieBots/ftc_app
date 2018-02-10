@@ -82,7 +82,7 @@ public class RedFar extends AutonomousBase {
         robot.PutArmUp();
         sleep(1000);
         driveDirectionTiles(Math.PI,  1.3, 0.5);
-        driveDirectionTiles((Math.PI)/2, .65+adjustDriveDistance(target), .5);
+        driveDirectionTiles((Math.PI)/2, .75+adjustDriveDistance(target), .5);
         turnRad(Math.PI/2);
         turnRad(Math.PI/2);
         robot.drive (0,.3,0);
@@ -96,7 +96,10 @@ public class RedFar extends AutonomousBase {
         robot.drive (0,.3,0);
         sleep(1400);
         driveDirectionTiles(Math.PI, .4,.5);
-
+        turnRad((3*Math.PI / 5.0));
+        robot.extendRelicArm(-1);
+        sleep(2600);
+        robot.RelicArmStop();
 
     }
 
