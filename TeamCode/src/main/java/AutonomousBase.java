@@ -21,6 +21,7 @@ public abstract class AutonomousBase extends LinearOpMode  {
         final int ticksToLand = (int) Math.floor(TICKS_PER_REV * (mm / MM_PER_REV));
         la.setMode(DcMotor.RunMode. STOP_AND_RESET_ENCODER);
         la.setTargetPosition(ticksToLand);
+        la.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         la.setPower(1.0);
         while (opModeIsActive()&& la.isBusy()) {
             sleep(0);
