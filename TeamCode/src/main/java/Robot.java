@@ -27,7 +27,8 @@ import java.util.Locale;
 /*
 THE ORDER OF MOTORS IS: lf, lb, rf, rb (REMEMBER LEFT IS ALWAYS FIRST)
  */
-
+//   !!3*PI/2 is Left!!
+//   !!PI/2  is Right!!
 public class Robot {
     private DcMotor lf, lb, rf, rb, tilt, tiltLeft, extend, la;
     private Servo blockL, blockR, lg, rg, top, ja, joint, clasp;
@@ -49,7 +50,7 @@ public class Robot {
 
         //colorReader = h.servo.get("color sensor");
 
-
+        //declaration
         lf = h.dcMotor.get("lf");
         lb = h.dcMotor.get("lb");
         rf = h.dcMotor.get("rf");
@@ -83,7 +84,7 @@ public class Robot {
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
+    //servo movements
     public void stopUp() {
         blockR.setPosition(0.06);
         blockL.setPosition(.72);
@@ -387,15 +388,18 @@ public class Robot {
     public void loop() {
         orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
-
+    //motors
     public void tiltUp() {
-        tilt.setPower(.5);
-        tiltLeft.setPower(-.5);
+        tilt.setPower(-.5);
+        tiltLeft.setPower(.5);
     }
-
+    public void tiltMarker() {
+        tilt.setPower(-.8);
+        tiltLeft.setPower(.8);
+    }
     public void tiltDown() {
-        tilt.setPower(-.4);
-        tiltLeft.setPower(.4);
+        tilt.setPower(.4);
+        tiltLeft.setPower(-.4);
     }
 
     public void stopTilt() {
