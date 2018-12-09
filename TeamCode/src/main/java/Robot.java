@@ -245,7 +245,7 @@ public class Robot {
 
     private static final double ENCODER_DRIVE_POWER = .25;
 
-    public static final double TICKS_PER_REV = 1120;
+    public static final double TICKS_PER_REV = 560;
     public static final double WHEEL_DIAMETER = 4.0;
     public static final double TICKS_PER_INCH = TICKS_PER_REV * (16. / 24.) / (int) (WHEEL_DIAMETER * Math.PI);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
