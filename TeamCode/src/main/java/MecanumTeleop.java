@@ -34,13 +34,13 @@ public class MecanumTeleop extends OpMode {
     @Override
     public void start() {
         robot.onStart();
+        robot.markerUp();
     }
 
     @Override
     public void stop() {
         robot.onStop();
     }
-
     private void g1Loop(Controller g) {
         DriverHelper.drive(g, robot);
 
@@ -48,6 +48,20 @@ public class MecanumTeleop extends OpMode {
             robot.stopDown();
         } else if (g.Y()) {
             robot.stopUp();
+        }
+
+        if (g.A()) {
+            robot.markerUp();
+        } else if (g.B()) {
+            robot.markerDown();
+        }
+
+        if (g.left_bumper > .2) {
+            robot.upSlow();
+        } else if (g.right_bumper > .2) {
+            robot.downSlow();
+        } else {
+            robot.laStop();
         }
 
         if (g.left_trigger > .2) {
@@ -90,21 +104,24 @@ public class MecanumTeleop extends OpMode {
         } else {
             robot.stopTilt();
         }
-        if (g.A()) {
+        /*if (g.A()) {
             robot.harvestIn();
         } else if (g.Y()) {
             robot.harvestOut();
         } else if (g.X()) {
             robot.harvestStop();
 
-        }
+        }*/
 
         if (g.left_bumper > .2) {
-            robot.extendOut();
+            robot.harvestIn();
+            //robot.extendOut();
         } else if (g.right_bumper > .2) {
-            robot.retract();
+            robot.harvestOut();
+            //robot.retract();
         } else {
-            robot.extendStop();
+            robot.harvestStop();
+            //robot.extendStop();\
         }
 
 

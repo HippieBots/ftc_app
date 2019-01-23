@@ -5,7 +5,6 @@
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
@@ -13,14 +12,19 @@ import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 //This is the actual AutoBase!!!!!!
 public abstract class AutonomousBase extends LinearOpMode  {
     protected Robot robot;
-    private static final double TICKS_PER_REV =560;
+    //this is for 40 motor//private static final double TICKS_PER_REV = 1120;
+    //this is for the 5.2:1 motor//private static final double TICKS_PER_REV = 145.6;
+    private static final double TICKS_PER_REV = 537.6;
     private static final double MM_PER_REV = 8.0;
+    private static final double TICKS_PER_REV_TILT = 1680;//change to actual?(maybe)
+    private static final double MM_PER_REV_TILT = 8.0;//change to actual
 
     void  runLiftMotor (final double mm) {
         final DcMotor la = robot.getLiftMotor();
         final int ticksToLand = (int) Math.floor(TICKS_PER_REV * (mm / MM_PER_REV));
         la.setMode(DcMotor.RunMode. STOP_AND_RESET_ENCODER);
         la.setTargetPosition(ticksToLand);
+        la.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         la.setPower(1.0);
         while (opModeIsActive()&& la.isBusy()) {
             sleep(0);
@@ -28,6 +32,33 @@ public abstract class AutonomousBase extends LinearOpMode  {
         la.setPower(0.0);
         la.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+
+
+    void  tiltOut (final double mm) {
+        final DcMotor tiltLeft = robot.getTiltMotorL();
+        final DcMotor tiltRight = robot.getTiltMotorR();
+        final int ticksToOut = (int) Math.floor(TICKS_PER_REV_TILT * (mm / MM_PER_REV_TILT));
+        tiltLeft.setMode(DcMotor.RunMode. STOP_AND_RESET_ENCODER);
+        tiltRight.setMode(DcMotor.RunMode. STOP_AND_RESET_ENCODER);
+        tiltLeft.setTargetPosition(ticksToOut);
+        tiltRight.setTargetPosition(-ticksToOut);
+        tiltLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        tiltRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        tiltLeft.setPower(0.68);
+        tiltRight.setPower(0.68);
+        while (opModeIsActive() && tiltLeft.isBusy() && tiltRight.isBusy()) {
+            sleep(0);
+        }
+        tiltLeft.setPower(0.0);
+        tiltRight.setPower(0.0);
+        tiltLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tiltRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+    }
+
 
     public void initialize(HardwareMap hm, Telemetry telemetry) {
     robot = new Robot(hm, telemetry);
@@ -93,9 +124,6 @@ public abstract class AutonomousBase extends LinearOpMode  {
         turnToAngleRad(radians);
     }
 
-    protected void driveDirectionTiles(double directionDegrees, double tiles) throws InterruptedException {
-        driveDirectionTiles(directionDegrees, tiles, .35);
-    }
     protected void driveDirectionTiles(double directionRadians, double tiles, double power) throws InterruptedException {
         robot.setEncoderDrivePower(power);
         robot.encoderDriveTiles(directionRadians, tiles);

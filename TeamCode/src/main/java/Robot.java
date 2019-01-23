@@ -30,15 +30,22 @@ THE ORDER OF MOTORS IS: lf, lb, rf, rb (REMEMBER LEFT IS ALWAYS FIRST)
 //   !!3*PI/2 is Left!!
 //   !!PI/2  is Right!!
 public class Robot {
-    private DcMotor lf, lb, rf, rb, tilt, tiltLeft, extend, la;
-    private Servo blockL, blockR, lg, rg, top, ja, joint, clasp;
+    private DcMotor lf, lb, rf, rb, tilt, tiltLeft, la, harvester;//extend
+    private Servo blockL, blockR, lg, rg, top, ja, joint, clasp, marker;
     private double lastG;
     private Telemetry telemetry;
     private BNO055IMU imu;
     private ColorSensor CS;
-    private CRServo harvester;
+
+    //private CRServo harvester;
 
     public DcMotor getLiftMotor() { return la; }
+
+    public DcMotor getTiltMotorL()
+        { return tiltLeft; }
+
+    public DcMotor getTiltMotorR()
+    { return tilt; }
 
     //private ColorSensor redVsBlue;
     //private Servo colorReader;
@@ -56,13 +63,15 @@ public class Robot {
         rf = h.dcMotor.get("rf");
         rb = h.dcMotor.get("rb");
         la = h.dcMotor.get("la");
+        harvester = h.dcMotor.get("harvester");
         tilt = h.dcMotor.get("tilt");
         tiltLeft = h.dcMotor.get("tiltLeft");
-        extend = h.dcMotor.get("extend");
-        harvester = h.crservo.get("harvester");
-        harvester.setPower(0);
+        //extend = h.dcMotor.get("extend");
+        //harvester = h.crservo.get("harvester");
+        //harvester.setPower(0);
         blockL = h.servo.get("blockL");
-        blockR =h.servo.get("blockR");
+        blockR = h.servo.get("blockR");
+        marker = h.servo.get("marker");
 
         /*lg = h.servo.get("lg");
         rg = h.servo.get("rg");
@@ -83,18 +92,26 @@ public class Robot {
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        la.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
     //servo movements
     public void stopUp() {
         blockR.setPosition(0.06);
-        blockL.setPosition(.72);
+        blockL.setPosition(.80);
     }
 
     public void stopDown() {
         blockR.setPosition(0.8);
         blockL.setPosition(0.00);
     }
-
+    //marker servo is on the left side of robot
+    public void markerUp() {
+        marker.setPosition(0.63);
+    }
+    public void markerDown() {
+        marker.setPosition(0.0);
+    }
    /* public void grabBlock() {
         lg.setPosition(.40);
         rg.setPosition(.25);
@@ -245,7 +262,7 @@ public class Robot {
 
     private static final double ENCODER_DRIVE_POWER = .25;
 
-    public static final double TICKS_PER_REV = 560;
+    public static final double TICKS_PER_REV = 537.6;
     public static final double WHEEL_DIAMETER = 4.0;
     public static final double TICKS_PER_INCH = TICKS_PER_REV * (16. / 24.) / (int) (WHEEL_DIAMETER * Math.PI);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -390,13 +407,14 @@ public class Robot {
     }
     //motors
     public void tiltUp() {
-        tilt.setPower(-.5);
-        tiltLeft.setPower(.5);
+        tilt.setPower(-.62);
+        tiltLeft.setPower(.62);
     }
-    public void tiltMarker() {
-        tilt.setPower(-.8);
-        tiltLeft.setPower(.8);
+    public void tiltUpAuto() {
+        tilt.setPower(-.55);
+        tiltLeft.setPower(.55);
     }
+
     public void tiltDown() {
         tilt.setPower(.4);
         tiltLeft.setPower(-.4);
@@ -407,13 +425,16 @@ public class Robot {
         tiltLeft.setPower(0.0);
     }
     public void harvestIn() {
-        harvester.setPower(-0.5);
+        harvester.setPower(1);
+        //harvester.setPower(-0.5);
     }
     public void harvestOut() {
-        harvester.setPower(0.5);
+        harvester.setPower(-1);
+        //harvester.setPower(0.5);
     }
     public void harvestStop() {
         harvester.setPower(0);
+        //harvester.setPower(0);
     }
 
     public void laUp() {
@@ -427,21 +448,27 @@ public class Robot {
     public void laStop() {
         la.setPower(0);
     }
+    public void upSlow() {
+        la.setPower(0.5);
+    }
+    public void downSlow() {
+        la.setPower(-0.5);
+    }
     //public void extendIn(final double power) {
       //  extend.setPower(power);
     //}
 
-    public void extendOut() {
+    /*public void extendOut() {
         extend.setPower(1);
     }
 
     public void retract() {
-        extend.setPower(-.2);
+        extend.setPower(-1);
     }
 
     public void extendStop() {
         extend.setPower(0.0);
-        }
+        }*/
 //    public boolean isRed(){
 //         if(CS.red()>CS.blue()){
 //             return true;

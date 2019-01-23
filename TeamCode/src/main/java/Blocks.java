@@ -22,20 +22,26 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
             }
 
             waitForStart();
-
-            runLiftMotor(-152);
-            driveDirectionTiles(Math.PI/2,0.2, .25);
-            driveDirectionTiles(0,2.25, .5);
+            runLiftMotor(150);
+            //runLiftMotor(149);
+            //driveDirectionTiles(Math.PI/2,0.2, .4);
+            //straffe in seconds
+            robot.drive (Math.PI / 2,.8,0);
+            sleep(200);
+            driveDirectionTiles(0,2.6, .5);
             robot.tiltUp();
             sleep(2200);
-            driveDirectionTiles(Math.PI, 1.40,0.5);
+            driveDirectionTiles(Math.PI, 1.85,0.5);
             turnRad(3*Math.PI / 2 );
-            driveDirectionTiles(0, 2.1, 0.5);
-            turnRad(75*Math.PI/40);
-            driveDirectionTiles(0,0.9,0.6);
+            driveDirectionTiles(0, 2.45, 0.5);
+            turnRad(19*Math.PI/10);
+            driveDirectionTiles(0,0.4,0.6);
+            turnRad(38*Math.PI/20);
+            driveDirectionTiles(0,0.4, 0.6);
             robot.stopDown();
             robot.tiltDown();
             sleep(1000);
+
         }
     }
 
